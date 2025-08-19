@@ -45,14 +45,14 @@ const drivers = [
   { id: 20, name: "Gabriel Bortoleto", team: "Kick Sauber" },
 ];
 
-server.get("/teams", async (request, response) => {
+server.get("/teams/", async (request, response) => {
   response.type("application/json").code(200);
-  return { teams };
+  return teams;
 });
 
-server.get("/drivers", async (request, response) => {
+server.get("/drivers/", async (request, response) => {
   response.type("application/json").code(200);
-  return { drivers };
+  return drivers;
 });
 
 interface Params {
@@ -60,7 +60,7 @@ interface Params {
 }
 
 server.get<{ Params: Params}>(
-  "/teams/:id",
+  "/team/:id",
   async (request, response) => {
     const id = parseInt(request.params.id);
     const team = teams.find((t) => t.id === id);
@@ -70,13 +70,13 @@ server.get<{ Params: Params}>(
       return { message: "Team Not Found" };
     } else {
       response.type("application/json").code(200);
-      return { team };
+      return team;
     }
   }
 );
 
 server.get<{ Params: Params }>(
-  "/drivers/:id",
+  "/driver/:id",
   async (request, response) => {
     const id = parseInt(request.params.id);
     const driver = drivers.find((d) => d.id === id);
@@ -86,7 +86,7 @@ server.get<{ Params: Params }>(
       return { message: "Driver Not Found" };
     } else {
       response.type("application/json").code(200);
-      return { driver };
+      return driver;
     }
   }
 );
@@ -142,7 +142,7 @@ server.post<{ Body: Driver }>(
 );
 
 server.put<{Params: Params, Body: Team}>(
-  "/team/:id",
+  "/teams/:id",
   async (request, response) => {
     const id = parseInt(request.params.id);
     const body = request.body;
@@ -194,7 +194,7 @@ server.delete<{Params: Params}>(
       response.type("application/json").code(404);
       return { message: "Team Not Found" };
     } else {
-      drivers.splice(teamIndex, 1);
+      teams.splice(teamIndex, 1);
 
       response.type("application/json").code(200);
       return { message: "OK" };
